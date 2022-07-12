@@ -39,7 +39,18 @@ export default class MatrixFx {
     const CHARACTER_SET = 'abcdefghjklmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ01234567890+-*/<>[]{}';
     const CHARACTER_COLORS = ['#3EF950', '#FF7BAC', '#FFCC00', '#5befeb'];
 
-    const textStyle = {fontFamily:"Verdana", fontSize:16, fill:[CHARACTER_COLORS[Math.floor(Math.random() * CHARACTER_COLORS.length)]]};
+    // Setup text styles and colors
+    const style0 = {fontFamily:"Verdana", fontSize:16, fill:[CHARACTER_COLORS[0]]};
+    const style1 = {fontFamily:"Verdana", fontSize:16, fill:[CHARACTER_COLORS[1]]};
+    const style2 = {fontFamily:"Verdana", fontSize:16, fill:[CHARACTER_COLORS[2]]};
+    const style3 = {fontFamily:"Verdana", fontSize:16, fill:[CHARACTER_COLORS[3]]};
+    const mixStyles = [style0, style1, style2, style3];
+
+    // Pick a singe style if not mix
+    const singleStyle = mixStyles[Math.floor(Math.random() * mixStyles.length)];
+
+    // Check for mixed style request
+    const isMix = window.location.search.indexOf('mixed') >= 0;
 
     // Matrix character reference
     const cmatrix:any = [];
@@ -51,10 +62,16 @@ export default class MatrixFx {
     const generateCharacters = (xp:number = 0) => {
 
       const clist:Text[] = [];
+      const randomStyle = mixStyles[Math.floor(Math.random() * mixStyles.length)];
+
       for (let i = 0; i < CHARACTER_COUNT; i++) {
 
         const char = CHARACTER_SET[Math.floor(Math.random() * CHARACTER_SET.length)];
-        const t = new Text(char, textStyle);
+        let t;
+        if (isMix)
+          t = new Text(char, randomStyle);
+        else
+          t = new Text(char, singleStyle);
         clist.push(t);
         t.x = xp;
         t.y = i * 22; // Character vertical spacing = 22
